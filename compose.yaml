@@ -1,0 +1,47 @@
+services:
+  front:
+    build: 
+      context: ./front
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - back
+    container_name: mvc-fa-front
+    command: npm run dev
+
+  back:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+    volumes:
+      - ./back:/app
+    environment:
+      - DEBUG=1
+      - DATABASE_URL=postgres://postgres:mysecretpassword@postgres:5432/postgres
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    container_name: mvc-fa-back
+    command: python manage.py runserver 0.0.0.0:8000
+
+  postgres:
+    image: postgres:13
+    ports:
+      - "5438:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    container_name: mvc-fa-db
+
+volumes:
+  postgres_data:
