@@ -1,6 +1,6 @@
 services:
   front:
-    build: 
+    build:
       context: ./front
       dockerfile: Dockerfile
     volumes:
@@ -16,7 +16,7 @@ services:
     command: npm run dev
 
   back:
-    build: 
+    build:
       context: ./back
       dockerfile: Dockerfile
     volumes:
